@@ -132,21 +132,51 @@ function inverseLabrouchere() {
 	echo -e "\n${yellowColour}[+]${endColour} ${grayColour}Comenzamos con la secuencia${endColour} ${greenColour}[${my_secuence[@]}]${endColour}"
 
 	bet=$((${my_secuence[0]} + ${my_secuence[-1]}))
-	unset my_secuence=${my_secuence[0]}
-	unset my_secuence=${my_secuence[-1]}
 
-	my_secuence=(${my_secuence[@]})
-	echo -e "${yellowColour}[+]${endColour} ${grayColour}Invertimos ${endColour}${yellowColour}\$$bet${endColour}${grayColour} y nuestra secuencia se queda en${endColour}${greenColour} [2 3]${endColour}"
-	
+	#unset my_secuence=${my_secuence[0]}
+	#unset my_secuence=${my_secuence[-1]}
+
+	#my_secuence=(${my_secuence[@]})
+
+	#echo -e "${yellowColour}[+]${endColour} ${grayColour}Invertimos ${endColour}${yellowColour}\$$bet${endColour}${grayColour} y nuestra secuencia se queda en${endColour}${greenColour} [2 3]${endColour}"
+
 	tput civis
 	while true; do
 		
 		random_number=$(($RANDOM % 37))
+		money=$(($money - $bet))
+		echo -e "${yellowColour}[+]${endColour}${grayColour} Tenemos ${endColour}${yellowColour}\$$money${endColour}"
 
 		echo -e "\n${yellowColour}[+]${endColour}${grayColour} Ha salido el número ${endColour}${blueColour}$random_number${endColour}"
+
+		if [ $par_impar == "par" ]; then
+
+			if [ "$(($random_number % 2))" -eq 0 ] && [ "$random_number" -ne 0 ]; then 
+				
+				echo -e "${yellowColour}[+]${endColour}${grayColour} El número es par, ¡ganas!${endColour}"
+				reward=$(($bet * 2))
+				let money+=$reward
+				echo -e "${yellowColour}[+]${endColour}${grayColour} Tienes ${endColour}${yellowColour}$money${endColour}"
+
+				my_secuence+=($bet)
+				my_secuence=(${my_secuence[@]})
+
+				echo -e "${yellowColour}[+]${endColour} ${grayColour} Nuestra nueva secuencia es ${endColour}${greenColour}[${my_secuence[@]}]${endColour}"
+				if [ "${#my_secuence[@]}" -ne 1 ]; then
+					bet=$((${my_secuence[0]} + ${my_secuence[-1]}))
+				elif [ "${#my_secuente[@]}" -eq 1]; then
+					bet=${my_secuence[0]}
+				fi
+
+			elif [ "$random_number" -eq 0 ]; then
+				echo -e "${redColour}[!] Ha salido el número cero, ¡pierdes!${endColour}"
+			else
+				echo -e "${redColour}[!] El número es impar, ¡pierdes!${endColour}"
+			fi
+
+		fi
 		
-
-
+		sleep 5
 	done
 	tput cnorm
 
